@@ -7,9 +7,10 @@ export function fetchCountries(name) {
     .then(r => r.json())
     .then(r => console.log(r))
     .then(r => {
+      console.log(r.length);
       if (r.length >= 2 && r.length <= 10) {
         console.log(`we have ${r.length} results waiting for you`);
-        createCountryLi(r.length, 'john');
+        createCountryLi(r.length, 'example Li');
       }
     })
     .catch(e => console.log(e));
