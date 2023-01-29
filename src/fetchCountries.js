@@ -1,17 +1,47 @@
-import { createCountryLi } from '.';
+import Notiflix from 'notiflix';
+import { foundCountry, createCountryLi } from '.';
 
 export function fetchCountries(name) {
   fetch(
     `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`
   )
-    .then(r => r.json())
-    .then(r => console.log(r))
     .then(r => {
-      console.log(r.length);
-      if (r.length >= 2 && r.length <= 10) {
-        console.log(`we have ${r.length} results waiting for you`);
-        createCountryLi(r.length, 'example Li');
+      if (r.ok) {
+        return r.json();
+      } else {
+        Notiflix.Notify.warning('Oops, there is no country with that name');
       }
     })
-    .catch(e => console.log(e));
+
+    .then(r => {
+      console.log(r);
+      switch (true) {
+        case r.length >= 2 && r.length <= 10:
+          Notiflix.Notify.info(`I have ${r.length} results waiting for you.`);
+          for (i = 0; i < r.length; i++) {
+            createCountryLi(r[i]['name'].common, r[i]['flags'].svg);
+          }
+          break;
+        case r.length > 10:
+          Notiflix.Notify.info(
+            'Too many matches found. Please enter a more specific name.'
+          );
+          break;
+        case r.length === 1:
+          foundCountry(
+            r[0]['name'].common,
+            r[0]['capital'],
+            r[0]['population'],
+            JSON.stringify(r[0]['languages'])
+          );
+          Notiflix.Notify.success(
+            'Yay, that is the country you were looking for!'
+          );
+          break;
+      }
+    })
+
+    .catch(e => {
+      console.log(e);
+    });
 }
