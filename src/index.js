@@ -10,22 +10,27 @@ const input = document.getElementById('search-box');
 const countryList = document.querySelector('.country-list');
 const countryInfo = document.querySelector('.country-info');
 
-export function easyFunction() {
-  console.log('trial');
-}
-export function createCountryLi(name, flag) {
-  const countryLi = document.createElement('li');
-  countryLi.textContent = name;
-  countryList.append(countryLi);
-  // console.log(flag);
-  // countryLi.insertAdjacentElement('afterbegin', `<img src='${flag}'/>`);
+export function createCountryLi(name, flagSrc) {
+  const countryEl = document.createElement('li');
+  const flag = document.createElement('img');
+  flag.src = flagSrc;
+  flag.width = 30;
+  countryEl.textContent = name;
+  countryList.append(countryEl);
+  countryEl.append(flag);
 }
 
-export function foundCountry(name, capital, pop, lang) {
-  countryList.innerHTML = '';
-  const countryLi = document.createElement('li');
-  countryLi.textContent = name;
-  countryList.append(countryLi);
+export function foundCountry(name, flagSrc, capital, pop, lang) {
+  const countryEl = document.createElement('li');
+  const flag = document.createElement('img');
+
+  clearCountry();
+  countryEl.textContent = name;
+  flag.src = flagSrc;
+  flag.width = 60;
+
+  countryList.append(countryEl);
+  countryEl.append(flag);
 
   const infoUl = document.createElement('ul');
   const capitalLi = document.createElement('li');
@@ -41,12 +46,16 @@ export function foundCountry(name, capital, pop, lang) {
   countryInfo.append(langLi);
 }
 
+export function clearCountry() {
+  countryList.innerHTML = '';
+  countryInfo.innerHTML = '';
+}
+
 // event listening input changes
 input.addEventListener(
   'input',
   _.debounce(() => {
-    countryList.innerHTML = '';
-
+    clearCountry();
     if (input.value.trim() != '') {
       fetchCountries(input.value.trim());
     }

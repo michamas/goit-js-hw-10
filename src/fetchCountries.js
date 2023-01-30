@@ -1,5 +1,5 @@
 import Notiflix from 'notiflix';
-import { foundCountry, createCountryLi } from '.';
+import { foundCountry, createCountryLi, clearCountry } from '.';
 
 export function fetchCountries(name) {
   fetch(
@@ -10,6 +10,7 @@ export function fetchCountries(name) {
         return r.json();
       } else {
         Notiflix.Notify.warning('Oops, there is no country with that name');
+        clearCountry();
       }
     })
 
@@ -19,7 +20,7 @@ export function fetchCountries(name) {
         case r.length >= 2 && r.length <= 10:
           Notiflix.Notify.info(`I have ${r.length} results waiting for you.`);
           for (let i = 0; i < r.length; i++) {
-            createCountryLi(r[i]['name'].common, r[i]['flags'].svg);
+            createCountryLi(r[i]['name'].common, r[i]['flags'].png);
           }
           break;
         case r.length > 10:
@@ -30,6 +31,7 @@ export function fetchCountries(name) {
         case r.length === 1:
           foundCountry(
             r[0]['name'].common,
+            r[0]['flags'].png,
             r[0]['capital'],
             r[0]['population'],
             JSON.stringify(r[0]['languages'])
