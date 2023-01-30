@@ -18,7 +18,7 @@ export function fetchCountries(name) {
       switch (true) {
         case r.length >= 2 && r.length <= 10:
           Notiflix.Notify.info(`I have ${r.length} results waiting for you.`);
-          for (i = 0; i < r.length; i++) {
+          for (let i = 0; i < r.length; i++) {
             createCountryLi(r[i]['name'].common, r[i]['flags'].svg);
           }
           break;
